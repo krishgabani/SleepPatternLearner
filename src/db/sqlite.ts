@@ -22,7 +22,9 @@ export async function migrateDbIfNeeded(db: SQLiteDatabase) {
       CREATE TABLE IF NOT EXISTS baby_profiles (
         id TEXT PRIMARY KEY NOT NULL,
         name TEXT NOT NULL,
-        birthDateISO TEXT NOT NULL
+        birthDateISO TEXT NOT NULL,
+        createdAtISO TEXT NOT NULL,
+        updatedAtISO TEXT NOT NULL
       );
 
       CREATE TABLE IF NOT EXISTS sleep_sessions (
