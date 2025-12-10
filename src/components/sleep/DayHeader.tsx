@@ -30,7 +30,7 @@ export const DayHeader: React.FC<Props> = ({
         {learnerState && (
           <Text style={styles.subtitle}>
             Wake ~ {Math.round(learnerState.ewmaWakeWindowMin)}m · Nap ~{' '}
-            {Math.round(learnerState.ewmaNapLengthMin)}m · conf{' '}
+            {Math.round(learnerState.ewmaNapLengthMin)}m · Conf ~{' '}
             {Math.round(learnerState.confidence * 100)}%
           </Text>
         )}
