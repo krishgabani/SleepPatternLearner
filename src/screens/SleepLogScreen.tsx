@@ -4,7 +4,11 @@ import { Pressable, ScrollView, StyleSheet, Text, View } from "react-native";
 import DateTimePickerModal from "react-native-modal-datetime-picker";
 
 import { computeCoachInsights } from "../coach";
-import { getActiveBabyProfile, initBabyProfileTable, upsertBabyProfile } from "../db/babyProfile";
+import {
+  getActiveBabyProfile,
+  initBabyProfileTable,
+  upsertBabyProfile,
+} from "../db/babyProfile";
 import {
   getSessionsForDay,
   insertSleepSession,
@@ -12,10 +16,8 @@ import {
   updateSleepSession,
 } from "../db/sleepSessions";
 import { computeLearnerState } from "../learner";
-import type { NotificationPlan } from '../notifications';
-import {
-  buildNotificationPlan,
-} from '../notifications';
+import type { NotificationPlan } from "../notifications";
+import { buildNotificationPlan } from "../notifications";
 import { generateSchedule } from "../schedule";
 import type {
   BabyProfile,
@@ -32,14 +34,13 @@ import { CoachPanel } from "../components/sleep/CoachPanel";
 import { DayHeader } from "../components/sleep/DayHeader";
 import { EditSessionPanel } from "../components/sleep/EditSessionPanel";
 import { ManualEntryForm } from "../components/sleep/ManualEntryForm";
-import { NotificationLog } from '../components/sleep/NotificationLog';
+import { NotificationLog } from "../components/sleep/NotificationLog";
 import { ScheduleSection } from "../components/sleep/ScheduleSection";
 import { SessionsList } from "../components/sleep/SessionsList";
 import { TimelineStrip } from "../components/sleep/TimelineStrip";
 import { TimerCard } from "../components/sleep/TimerCard";
 import { TrendsChart } from "../components/sleep/TrendsChart";
 import { WhatIfScheduleSection } from "../components/sleep/WhatIfScheduleSection";
-
 
 // TODO: replace with real baby profile later
 const DEFAULT_BABY_BIRTHDATE = "2024-01-01";
@@ -96,9 +97,9 @@ export default function SleepLogScreen() {
   // What-if: wake window offset in minutes (-30..+30)
   const [wakeOffsetMin, setWakeOffsetMin] = useState(0);
 
-  const [activeTab, setActiveTab] = useState<"today" | "insights" | "profile">(
-    "today"
-  );
+  const [activeTab, setActiveTab] = useState<
+    "today" | "insights" | "profile" | "notifications"
+  >("today");
   const [scheduleView, setScheduleView] = useState<"plan" | "whatif">("plan");
 
   const [coachInsights, setCoachInsights] = useState<CoachInsight[]>([]);
@@ -111,7 +112,9 @@ export default function SleepLogScreen() {
     { date: dayjs.Dayjs; totalMin: number }[]
   >([]);
 
-  const [notificationPlan, setNotificationPlan] = useState<NotificationPlan[]>([]);
+  const [notificationPlan, setNotificationPlan] = useState<NotificationPlan[]>(
+    []
+  );
 
   // Load profile
   useEffect(() => {
@@ -502,12 +505,13 @@ export default function SleepLogScreen() {
     return days > 0 ? `${months}mo ${days}d` : `${months}mo`;
   };
 
-  type TabKey = "today" | "insights" | "profile";
+  type TabKey = "today" | "insights" | "profile" | "notifications";
 
   const tabs: { key: TabKey; label: string }[] = [
     { key: "today", label: "Today" },
     { key: "insights", label: "Insights" },
     { key: "profile", label: "Profile" },
+    { key: "notifications", label: "Notifications" },
   ];
 
   const scheduleTabs = [
@@ -665,6 +669,9 @@ export default function SleepLogScreen() {
               saving={savingProfile}
               onSaveProfile={handleSaveBabyProfile}
             />
+          </>
+        ) : activeTab === "notifications" ? (
+          <>
             <NotificationLog entries={notificationPlan} />
           </>
         ) : null}
