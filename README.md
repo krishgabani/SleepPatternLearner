@@ -1,50 +1,77 @@
-# Welcome to your Expo app 👋
+# CoddleAI -- Sleep Pattern Learner & Smart Schedule (Local Coach)
 
-This is an [Expo](https://expo.dev) project created with [`create-expo-app`](https://www.npmjs.com/package/create-expo-app).
+CoddleAI is a **React Native** mobile application that helps
+parents log baby sleep, analyze patterns locally, and generate adaptive
+nap/bedtime schedules.
 
-## Get started
+## Installation
 
-1. Install dependencies
+### Requirements
 
-   ```bash
-   npm install
-   ```
+-   Node 18+
+-   npm
+-   Expo Go
 
-2. Start the app
+### Install
 
-   ```bash
-   npx expo start
-   ```
-
-In the output, you'll find options to open the app in a
-
-- [development build](https://docs.expo.dev/develop/development-builds/introduction/)
-- [Android emulator](https://docs.expo.dev/workflow/android-studio-emulator/)
-- [iOS simulator](https://docs.expo.dev/workflow/ios-simulator/)
-- [Expo Go](https://expo.dev/go), a limited sandbox for trying out app development with Expo
-
-You can start developing by editing the files inside the **app** directory. This project uses [file-based routing](https://docs.expo.dev/router/introduction).
-
-## Get a fresh project
-
-When you're ready, run:
-
-```bash
-npm run reset-project
+``` sh
+npm install
 ```
 
-This command will move the starter code to the **app-example** directory and create a blank **app** directory where you can start developing.
+### Running the App
 
-## Learn more
 
-To learn more about developing your project with Expo, look at the following resources:
+``` sh
+npx expo start
+```
 
-- [Expo documentation](https://docs.expo.dev/): Learn fundamentals, or go into advanced topics with our [guides](https://docs.expo.dev/guides).
-- [Learn Expo tutorial](https://docs.expo.dev/tutorial/introduction/): Follow a step-by-step tutorial where you'll create a project that runs on Android, iOS, and the web.
+Scan QR with Expo Go.
 
-## Join the community
+## Architecture Overview
 
-Join our community of developers creating universal apps.
+1.  Sleep sessions → SQLite
+2.  Learner pipeline → EWMA of naps & wake windows
+3.  Schedule generator → blocks (nap, wind-down, bedtime)
+4.  Notification scheduler → logged
+5.  Coach → rule-based insights
 
-- [Expo on GitHub](https://github.com/expo/expo): View our open source platform and contribute.
-- [Discord community](https://chat.expo.dev): Chat with Expo users and ask questions.
+## Learner & Scheduling Logic
+
+### Baseline Table (Age-Based Defaults)
+
+| Age (months) | Nap Length    | Wake Window    |
+|--------------|---------------|----------------|
+| 0-2          | ~60 min       | 45-60 min      |
+| 3-5          | 60-90 min     | 90-120 min     |
+| 6-8          | ~90 min       | 120-150 min    |
+| 9-12         | 90-120 min    | 150-180 min    |
+
+
+### EWMA Parameters
+
+-   Nap length `alpha = 0.30`
+-   Wake window `alpha = 0.35`
+
+## Coach Rules
+
+-   Short naps (<70% target)
+-   Long naps (>130% target)
+-   Wake windows too long or too short
+-   Cluster of short naps
+-   High variability
+-   Not enough data
+-   All-good reassurance message
+
+## Known Trade-offs
+
+-   No persisted learner state
+-   Simplified DST
+-   Small in-memory views
+-   Expo Go notification limitations
+
+## Future Improvements
+
+-   Persisted learner state
+-   Baseline-vs-learned charts
+-   More coach rules
+-   More notification toggles
