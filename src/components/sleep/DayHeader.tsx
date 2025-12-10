@@ -29,8 +29,8 @@ export const DayHeader: React.FC<Props> = ({
         <Text style={styles.subtitle}>Total sleep: {formatMinutes(totalSleepMin)}</Text>
         {learnerState && (
           <Text style={styles.subtitle}>
-            Wake ~ {Math.round(learnerState.ewmaWakeWindowMin)}m · Nap ~{' '}
-            {Math.round(learnerState.ewmaNapLengthMin)}m · Conf ~{' '}
+            Wake ~ {formatMinutes(Math.round(learnerState.ewmaWakeWindowMin))} · Nap ~{' '}
+            {formatMinutes(Math.round(learnerState.ewmaNapLengthMin))} · Conf ~{' '}
             {Math.round(learnerState.confidence * 100)}%
           </Text>
         )}
